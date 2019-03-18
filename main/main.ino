@@ -10,8 +10,6 @@ const int BUILTIN_LED = 13;
 const int SPI_MISO = 12;
 const int SPI_MOSI = 11;
 
-
-
 // Files.
 char filename[13] = "LOGGER00.CSV"; 
 File logger;
