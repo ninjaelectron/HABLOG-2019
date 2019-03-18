@@ -2,6 +2,7 @@
 #include <SD_t3.h> // Required extension for the Teensy 3.2
 #include <SPI.h>
 #include "util.h"
+#include <Adafruit_BME280.h>
 
 // Declare any constant pinouts here.
 const int BUILTIN_LED = 13;
@@ -16,17 +17,21 @@ const int BME_CS = 9;
 char filename[13] = "LOGGER00.CSV"; 
 File logger;
 
+// BME Stuff
+//Adafruit_BME280 bme(BME_CS);   
+
 void setup() {
     Serial.begin(9600);
     debug("Serial Test...");
 
     pinMode(SD_CS, OUTPUT);
-    //pinMode(BME_CS, OUTPUT);
+    pinMode(BME_CS, OUTPUT);
 
-    // switchSPI(SD_CS, BME_CS);
-
+    switchSPI(SD_CS, BME_CS);
     sd_init();
 
+    switchSPI(BME_CS, SD_CS)
+    bme_init();
 }
 
 void loop() {
@@ -55,7 +60,7 @@ void sd_init() {
               debug("Error: Not enough space on SD Card!");
 
               while (true) {
-                  debugBlink(13); // Blinkenlights are for emergencies only.               
+                  debugBlink(13); // Blinkenlights are for emergencies only.g               
               }
             }
             
@@ -69,4 +74,8 @@ void sd_init() {
         }
     }
 
+}
+
+bme_init() {
+ 
 }
