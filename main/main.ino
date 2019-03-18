@@ -1,17 +1,16 @@
 #include <SD.h>
 #include <SD_t3.h> // Required extension for the Teensy 3.2
 #include <SPI.h>
-#include "util.h"
-#include <Adafruit_BME280.h>
+#include "util.h" // Various utilities for SD Card usage, debugging, etc...
+#include "sensors.h" // Functions relating to the usage and init of sensors
+
 
 // Declare any constant pinouts here.
 const int BUILTIN_LED = 13;
 const int SPI_MISO = 12;
 const int SPI_MOSI = 11;
 
-// SPI Chip-Select Pins.
-const int SD_CS = 10;
-const int BME_CS = 9;
+
 
 // Files.
 char filename[13] = "LOGGER00.CSV"; 
@@ -30,7 +29,7 @@ void setup() {
     switchSPI(SD_CS, BME_CS);
     sd_init();
 
-    switchSPI(BME_CS, SD_CS)
+    switchSPI(BME_CS, SD_CS);
     bme_init();
 }
 
@@ -73,9 +72,4 @@ void sd_init() {
             debug(filename);
         }
     }
-
-}
-
-bme_init() {
- 
 }

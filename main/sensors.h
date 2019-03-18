@@ -1,0 +1,2 @@
+
+void bme_init();
