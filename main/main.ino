@@ -5,6 +5,8 @@
 #include "sensors.h" // Functions relating to the usage and init of sensors
 
 
+#define GPS_SERIAL Serial2
+
 // Declare any constant pinouts here.
 const int BUILTIN_LED = 13;
 const int SPI_MISO = 12;
@@ -25,6 +27,8 @@ DallasTemperature dsTemp(&oneWire); // Link that bus to the DT Library
 void setup() {
     Serial.begin(9600);
     debug("Serial Test...");
+
+    GPS_SERIAL.begin(9600); // GPS Hardware Serial.
 
     pinMode(SD_CS, OUTPUT);
     pinMode(BME_CS, OUTPUT);
