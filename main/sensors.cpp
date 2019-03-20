@@ -2,7 +2,7 @@
 #include <Adafruit_BME280.h>
 #include <Adafruit_Sensor.h>
 
-#include <OneWire.h>
+#include <OneWire.h> // Dependencies for DallasTemperature.h
 #include <DallasTemperature.h>
 
 #include "sensors.h"
@@ -14,4 +14,8 @@ void bme_init(int cs) {
     if (!pressure.begin()) { // bme.begin() returns true if it succeeds.
       debug("Pressure Sensor Failed!");
     }
+}
+
+void ds_init() {
+    dsTemp.begin();
 }
