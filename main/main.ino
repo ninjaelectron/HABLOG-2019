@@ -25,10 +25,10 @@ void setup() {
     pinMode(BME_CS, OUTPUT);
 
     switchSPI(SD_CS, BME_CS);
-    sd_init();
+    sd_init(SD_CS);
 
     switchSPI(BME_CS, SD_CS);
-    bme_init();
+    bme_init(BME_CS);
 }
 
 void loop() {
@@ -36,9 +36,9 @@ void loop() {
 
 }
 
-void sd_init() {
+void sd_init(int cs) {
   
-    if(!SD.begin(SD_CS)) { // Check if SD Card can be found.
+    if(!SD.begin(cs)) { // Check if SD Card can be found.
         debug("Error: SD Card not found.");
     } else {
         debug("SD Card found!");

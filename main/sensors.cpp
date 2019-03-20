@@ -8,8 +8,8 @@
 #include "sensors.h"
 #include "util.h"
 
-void bme_init() {
-    Adafruit_BME280 pressure(BME_CS);
+void bme_init(int cs) {
+    Adafruit_BME280 pressure(cs);
 
     if (!pressure.begin()) { // bme.begin() returns true if it succeeds.
       debug("Pressure Sensor Failed!");
