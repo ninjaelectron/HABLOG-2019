@@ -21,6 +21,7 @@ Adafruit_BME280 pressure(BME_CS);
 OneWire oneWire(OneWireBus); // Define OneWire Bus
 DallasTemperature dsTemp(&oneWire); // Link that bus to the DT Library
 
+// BEGIN BME ROUTINES
 void bme_init(int cs) {
     Adafruit_BME280 pressure(cs);
 
@@ -28,7 +29,15 @@ void bme_init(int cs) {
       debug("Pressure Sensor Failed!");
     }
 }
+// END BME ROUTINES
 
+// BEGIN DS ROUTINES
 void ds_init() {
     dsTemp.begin();
 }
+
+int ds_getData() {
+  // TODO: Find the specific number of decimal places returned by the DS18B20 device.
+}
+
+// END DS ROUTINES
