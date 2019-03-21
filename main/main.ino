@@ -3,18 +3,19 @@
 #include <SPI.h>
 #include "util.h" // Various utilities for SD Card usage, debugging, etc...
 #include "sensors.h" // Functions relating to the usage and init of sensors
+#include "gps.h"
 
-
+// Precompiler Definitions.
 #define GPS_SERIAL Serial2
-
 
 
 // Files.
 char filename[13] = "LOGGER00.CSV"; 
 File logger;
 
- 
-
+// Interrupt logic for GPS Module.
+boolean usingInterrupt = true;
+void gpsInterrupt(boolean);
 
 
 void setup() {
@@ -25,6 +26,8 @@ void setup() {
 
     pinMode(SD_CS, OUTPUT);
     pinMode(BME_CS, OUTPUT);
+
+    gps_init();
 
     switchSPI(SD_CS, BME_CS);
     sd_init(SD_CS);
@@ -37,8 +40,9 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+    if (gps_readWrapper()) {
+      // Continue with data acquisition.
+    }
 }
 
 void sd_init(int cs) {
