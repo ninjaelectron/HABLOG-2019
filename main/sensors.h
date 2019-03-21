@@ -1,4 +1,4 @@
 
-void bme_init();
+void bme_init(int cs);
 
-void oneWire_init();
+void ds_init();

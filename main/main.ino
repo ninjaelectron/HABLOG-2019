@@ -7,22 +7,15 @@
 
 #define GPS_SERIAL Serial2
 
-// Declare any constant pinouts here.
-const int BUILTIN_LED = 13;
-const int SPI_MISO = 12;
-const int SPI_MOSI = 11;
-const int OneWireBus = 2;
+
 
 // Files.
 char filename[13] = "LOGGER00.CSV"; 
 File logger;
 
-// BME Stuff
-Adafruit_BME280 pressure(BME_CS);   
+ 
 
-// OneWire stuff
-OneWire oneWire(OneWireBus); // Define OneWire Bus
-DallasTemperature dsTemp(&oneWire); // Link that bus to the DT Library
+
 
 void setup() {
     Serial.begin(9600);
