@@ -13,11 +13,6 @@
 char filename[13] = "LOGGER00.CSV"; 
 File logger;
 
-// Interrupt logic for GPS Module.
-boolean usingInterrupt = true;
-void gpsInterrupt(boolean);
-
-
 void setup() {
     Serial.begin(9600);
     debug("Serial Test...");
