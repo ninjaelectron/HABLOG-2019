@@ -38,8 +38,8 @@ int bme_getHumidity() {
     return bme.readHumidity(); // Humidity as integer, percent.
 }
 
-float bme_getTemperatureC() {
-    return bme.readTemperature(); //
+int bme_getTemperatureC() {
+    return (int(bme.readTemperature() * 100)); // Float, unknown decimal points. Assuming 2.
 }
 // END BME ROUTINES
 

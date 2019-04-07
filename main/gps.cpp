@@ -15,7 +15,7 @@ void gps_init() {
 boolean gps_parseWrapper() { // Returns success/fail of GPS data acquisition.
     if (gps.newNMEAreceived()) { // Got from gps_readWrapper().
         if (!gps.parse(gps.lastNMEA())) {
-          return false; // Cancel data upload if GPS Fails. Probably will cause problems.    
+            return false; // Cancel data upload if GPS Fails. Probably will cause problems.    
         }
 
         Serial.println(gps.seconds, DEC);
@@ -31,4 +31,19 @@ boolean gps_readWrapper() {
     if (gps_DEBUG) Serial.print(c);
 
     return gps_parseWrapper();
+}
+
+char* convertLatLong() {
+    float latitude = gps.latitude;
+    float longitude = gps.longitude;
+    char outputLat[11];
+    char outputLong[11];
+    char finalOutput[22];
+
+    dtostrf(latitude,10,4,outputLat);
+    dtostrf(longitude,10,4,outputLong);
+
+    strcat(finalOutput, outputLat);
+    strcat(finalOutput, ",");
+    strcat(finalOutput, outputLong);
 }

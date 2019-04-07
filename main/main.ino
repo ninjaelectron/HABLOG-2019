@@ -8,6 +8,7 @@
 // Precompiler Definitions.
 #define GPS_SERIAL Serial2
 
+char dataBuffer[64];
 
 // Files.
 char filename[13] = "LOGGER00.CSV"; 
@@ -37,6 +38,9 @@ void setup() {
 void loop() {
     if (gps_readWrapper()) {
       // Continue with data acquisition.
+
+      // Dataformat: HH:MM:SS,millis(),satelliteCount,latitudelongitude,BMEPressure,BMETemperature,BMEHumidity
+      sprintf(dataBuffer, "%u:%u:%u,%l,%u,%s,%i,%i,%i,");
     }
 }
 
