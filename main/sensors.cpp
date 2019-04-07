@@ -15,7 +15,7 @@ const int SPI_MOSI = 11;
 const int OneWireBus = 2;
 
 // BME Stuff
-Adafruit_BME280 pressure(BME_CS);  
+Adafruit_BME280 bme(BME_CS);  
 
 // OneWire stuff
 OneWire oneWire(OneWireBus); // Define OneWire Bus
@@ -23,11 +23,23 @@ DallasTemperature dsTemp(&oneWire); // Link that bus to the DT Library
 
 // BEGIN BME ROUTINES
 void bme_init(int cs) {
-    Adafruit_BME280 pressure(cs);
+    Adafruit_BME280 bme(cs);
 
-    if (!pressure.begin()) { // bme.begin() returns true if it succeeds.
+    if (!bme.begin()) { // bme.begin() returns true if it succeeds.
       debug("Pressure Sensor Failed!");
     }
+}
+
+int bme_getPressure() {
+    return bme.readPressure(); // Integer, Pascals.
+}
+
+int bme_getHumidity() {
+    return bme.readHumidity(); // Humidity as integer, percent.
+}
+
+float bme_getTemperatureC() {
+    return bme.readTemperature(); //
 }
 // END BME ROUTINES
 
