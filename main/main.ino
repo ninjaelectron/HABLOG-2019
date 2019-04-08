@@ -40,7 +40,7 @@ void loop() {
       // Continue with data acquisition.
 
       // Dataformat: HH:MM:SS,millis(),satelliteCount,latitudelongitude,BMEPressure,BMETemperature,BMEHumidity
-      sprintf(dataBuffer, "%u:%u:%u,%l,%u,%s,%i,%i,%i,");
+      sprintf(dataBuffer, "%u:%u:%u,%l,%u,%s,"gps_get);
     }
 }
 

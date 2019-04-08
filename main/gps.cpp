@@ -34,8 +34,8 @@ boolean gps_readWrapper() {
 }
 
 char* convertLatLong() {
-    float latitude = gps.latitude;
-    float longitude = gps.longitude;
+    float latitude = gps.latitudeDegrees;
+    float longitude = gps.longitudeDegrees;
     char outputLat[11];
     char outputLong[11];
     char finalOutput[22];
@@ -46,4 +46,6 @@ char* convertLatLong() {
     strcat(finalOutput, outputLat);
     strcat(finalOutput, ",");
     strcat(finalOutput, outputLong);
+
+    return finalOutput;
 }
