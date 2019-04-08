@@ -29,7 +29,7 @@ boolean gps_readWrapper() {
             return false; // Cancel data upload if GPS Fails. Probably will cause problems.    
         }
 
-        Serial.println(gps_getLatLong());
+        Serial.println(gps_getTime());
 
         return true; // Good to acquire data.
     }
@@ -58,7 +58,7 @@ char *gps_getLatLong() { // Get current location (in a Google Maps-compliant for
 char* gps_getTime() { // Get current UTC Time.
     static char out[9] = "";
 
-    sprintf(out, "%u:%u:%u,", gps.hour,gps.minute,gps.seconds);
+    sprintf(out, "%02u:%02u:%02u,", gps.hour,gps.minute,gps.seconds);
 
     return out;
 }

@@ -43,7 +43,7 @@ char* bme_getTemperatureC() {
     float pressure = bme.readTemperature();
     static char out[7] = "";
 
-    dtostrf(pressure, 7, 2, out);
+    dtostrf(pressure, 0, 2, out);
     return out; 
 }
 
@@ -66,7 +66,7 @@ char* ds_getData() {
     float temp = dsTemp.getTempCByIndex(0); // Convert to float Degrees C.
     static char out[8] = "";
     
-    dtostrf(temp, 8, 2, out);
+    dtostrf(temp, 0, 2, out);
     return out;
 }
 
@@ -91,5 +91,7 @@ int uv_getData() {
 char* uv_packageData() {
     static char out[6] = "";
     sprintf(out, "%i,", uv_getData());
+
+    return out;
 }
 // END UV ROUTINES
