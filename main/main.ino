@@ -42,7 +42,7 @@ void loop() {
       // Continue with data acquisition.
       
       // Dataformat: GPSTime,GPSLatLong,GPSData
-      sprintf(dataBuffer, "%s%s%s", gps_getTime(),gps_getLatLong(),gps_getMiscData());
+      //sprintf(dataBuffer, "%s%s%s", gps_getTime(),gps_getLatLong(),gps_getMiscData());
 
       Serial.println(dataBuffer);
     } else {

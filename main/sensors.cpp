@@ -41,14 +41,14 @@ int bme_getHumidity() {
 
 char* bme_getTemperatureC() {
     float pressure = bme.readTemperature();
-    char out[7] = "";
+    static char out[7] = "";
 
     dtostrf(pressure, 7, 2, out);
     return out; 
 }
 
 char* bme_packageData() {
-    char out[21] = "";
+    static char out[21] = "";
     
     sprintf(out, "%s,%i,%i,", bme_getTemperatureC(),bme_getPressure(),bme_getHumidity());
     return out;
@@ -64,14 +64,14 @@ void ds_init() {
 char* ds_getData() {
     dsTemp.requestTemperatures(); // Get Temperature from device;
     float temp = dsTemp.getTempCByIndex(0); // Convert to float Degrees C.
-    char out[8] = "";
+    static char out[8] = "";
     
     dtostrf(temp, 8, 2, out);
     return out;
 }
 
 char* ds_packageData() {
-    char out[9] = "";
+    static char out[9] = "";
     
     sprintf(out, "%s,", ds_getData());
     return out;
@@ -89,7 +89,7 @@ int uv_getData() {
 }
 
 char* uv_packageData() {
-    char out[6] = "";
+    static char out[6] = "";
     sprintf(out, "%i,", uv_getData());
 }
 // END UV ROUTINES

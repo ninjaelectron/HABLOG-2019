@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Adafruit_GPS.h>
+#include "gps.h"
 #include "util.h"
 
 HardwareSerial gpsSerial = Serial1;
@@ -25,31 +26,28 @@ boolean gps_readWrapper() {
 
     if (gps.newNMEAreceived()) { // Got from gps_readWrapper().
         if (!gps.parse(gps.lastNMEA())) {
-            Serial.println("Parsefail");
             return false; // Cancel data upload if GPS Fails. Probably will cause problems.    
         }
 
-        Serial.println(gps.seconds, DEC);
+        Serial.println(gps_getLatLong());
 
-        Serial.println("GoodData");
         return true; // Good to acquire data.
     }
     return false; // No data to acquire yet.
 }
 
-char* gps_getLatLong() { // Get current location (in a Google Maps-compliant format).
+char *gps_getLatLong() { // Get current location (in a Google Maps-compliant format).
     float latitude = gps.latitudeDegrees;
     float longitude = gps.longitudeDegrees;
-    char outputLat[11];
-    char outputLong[11];
-    char finalOutput[22];
+    char outputLat[11] = "";
+    char outputLong[11] = "";
+    static char finalOutput[22] = "";
 
-    dtostrf(latitude,10,4,outputLat);
-    dtostrf(longitude,10,4,outputLong);
 
-    strcat(finalOutput, outputLat);
-    strcat(finalOutput, ",");
-    strcat(finalOutput, outputLong);
+    dtostrf(latitude,0,4,outputLat); // dtostrf arg2 is minimum characters, not expected
+    dtostrf(longitude,0,4,outputLong);
+    
+    sprintf(finalOutput, "%s,%s,", outputLat, outputLong);
 
     return finalOutput;
 
@@ -58,7 +56,7 @@ char* gps_getLatLong() { // Get current location (in a Google Maps-compliant for
 }
 
 char* gps_getTime() { // Get current UTC Time.
-    char out[9] = "";
+    static char out[9] = "";
 
     sprintf(out, "%u:%u:%u,", gps.hour,gps.minute,gps.seconds);
 
@@ -69,7 +67,7 @@ char* gps_getFlightParameters() { // Get speed, altitude, etc...
     char speedKnots[6] = "";
     char heading[6] = "";
     char altitudeMeters[9] = "";
-    char out[25] = "";
+    static char out[25] = "";
 
     dtostrf(gps.speed, 6, 1, speedKnots);
     dtostrf(gps.angle, 6, 1, heading);
@@ -84,7 +82,7 @@ char* gps_getFlightParameters() { // Get speed, altitude, etc...
 }
 
 char* gps_getMiscData() { // Get various data such as fix quality.
-    char out[6] = "";
+    static char out[6] = "";
     sprintf(out, "%u,%u,", gps.fixquality,gps.satellites);
 
     return out;
