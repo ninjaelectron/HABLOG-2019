@@ -2,9 +2,9 @@
 #include <Adafruit_GPS.h>
 #include "util.h"
 
-const boolean gps_DEBUG = false; // Debug toggle.
-
 Adafruit_GPS gps(&Serial2);
+
+const boolean gps_DEBUG = false; // Debug toggle.
 
 void gps_init() {
     gps.begin(9600); // Begin Communication with GPS Module.
@@ -33,7 +33,7 @@ boolean gps_readWrapper() {
     return gps_parseWrapper();
 }
 
-char* convertLatLong() {
+char* gps_getLatLong() {
     float latitude = gps.latitudeDegrees;
     float longitude = gps.longitudeDegrees;
     char outputLat[11];
@@ -48,4 +48,40 @@ char* convertLatLong() {
     strcat(finalOutput, outputLong);
 
     return finalOutput;
+
+    free(outputLat); // Clear memory associated with the variable.
+    free(outputLong);
+}
+
+char* gps_getTime() {
+    char out[8] = "";
+
+    sprintf(out, "%u:%u:%u", gps.hour,gps.minute,gps.seconds);
+
+    return out;
+}
+
+char* gps_getFlightParameters() {
+    char speedKnots[6] = "";
+    char heading[6] = "";
+    char altitudeMeters[9] = "";
+    char out[24] = "";
+
+    dtostrf(gps.speed, 6, 1, speedKnots);
+    dtostrf(gps.angle, 6, 1, heading);
+    dtostrf(gps.altitude, 9, 1, altitudeMeters);
+    sprintf(out, "%s,%s,%s", speedKnots,heading,altitudeMeters);
+
+    return out;
+
+    free(speedKnots);
+    free(heading);
+    free(altitudeMeters);
+}
+
+char* gps_getMiscData() {
+    char out[5] = "";
+    sprintf(out, "%u,%u", gps.fixquality,gps.satellites);
+
+    return out;
 }
