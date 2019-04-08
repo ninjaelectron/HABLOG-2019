@@ -33,7 +33,7 @@ boolean gps_readWrapper() {
     return gps_parseWrapper();
 }
 
-char* gps_getLatLong() {
+char* gps_getLatLong() { // Get current location (in a Google Maps-compliant format).
     float latitude = gps.latitudeDegrees;
     float longitude = gps.longitudeDegrees;
     char outputLat[11];
@@ -53,24 +53,24 @@ char* gps_getLatLong() {
     free(outputLong);
 }
 
-char* gps_getTime() {
-    char out[8] = "";
+char* gps_getTime() { // Get current UTC Time.
+    char out[9] = "";
 
-    sprintf(out, "%u:%u:%u", gps.hour,gps.minute,gps.seconds);
+    sprintf(out, "%u:%u:%u,", gps.hour,gps.minute,gps.seconds);
 
     return out;
 }
 
-char* gps_getFlightParameters() {
+char* gps_getFlightParameters() { // Get speed, altitude, etc...
     char speedKnots[6] = "";
     char heading[6] = "";
     char altitudeMeters[9] = "";
-    char out[24] = "";
+    char out[25] = "";
 
     dtostrf(gps.speed, 6, 1, speedKnots);
     dtostrf(gps.angle, 6, 1, heading);
     dtostrf(gps.altitude, 9, 1, altitudeMeters);
-    sprintf(out, "%s,%s,%s", speedKnots,heading,altitudeMeters);
+    sprintf(out, "%s,%s,%s,", speedKnots,heading,altitudeMeters);
 
     return out;
 
@@ -79,9 +79,9 @@ char* gps_getFlightParameters() {
     free(altitudeMeters);
 }
 
-char* gps_getMiscData() {
-    char out[5] = "";
-    sprintf(out, "%u,%u", gps.fixquality,gps.satellites);
+char* gps_getMiscData() { // Get various data such as fix quality.
+    char out[6] = "";
+    sprintf(out, "%u,%u,", gps.fixquality,gps.satellites);
 
     return out;
 }

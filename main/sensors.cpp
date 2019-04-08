@@ -38,9 +38,21 @@ int bme_getHumidity() {
     return bme.readHumidity(); // Humidity as integer, percent.
 }
 
-int bme_getTemperatureC() {
-    return (int(bme.readTemperature() * 100)); // Float, unknown decimal points. Assuming 2.
+char* bme_getTemperatureC() {
+    float pressure = bme.readTemperature();
+    char out[7] = "";
+
+    dtostrf(pressure, 7, 2, out);
+    return out; 
 }
+
+char* bme_packageData() {
+    char out[21] = "";
+    
+    sprintf(out, "%s,%i,%i,", bme_getTemperatureC(),bme_getPressure(),bme_getHumidity());
+    return out;
+}
+
 // END BME ROUTINES
 
 // BEGIN DS ROUTINES
@@ -48,8 +60,20 @@ void ds_init() {
     dsTemp.begin();
 }
 
-int ds_getData() {
-  // TODO: Find the specific number of decimal places returned by the DS18B20 device.
+char* ds_getData() {
+    dsTemp.requestTemperatures(); // Get Temperature from device;
+    float temp = dsTemp.getTempCByIndex(0); // Convert to float Degrees C.
+    char out[8] = "";
+    
+    dtostrf(temp, 8, 2, out);
+    return out;
+}
+
+char* ds_packageData() {
+    char out[9] = "";
+    
+    sprintf(out, "%s,", ds_getData());
+    return out;
 }
 
 // END DS ROUTINES
