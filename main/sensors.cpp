@@ -24,32 +24,39 @@ DallasTemperature dsTemp(&oneWire); // Link that bus to the DT Library
 
 // BEGIN BME ROUTINES
 void bme_init() {
-
+    switchSPI(BME_CS);
     if (!bme.begin()) { // bme.begin() returns true if it succeeds.
       Serial.println("Pressure Sensor Failed!");
     } else {
       Serial.println("PGood!");
     }
+    switchSPI(SD_CS);
 }
 
 char* bme_getPressure() {
+    switchSPI(BME_CS);
     static char out[7] = "";
     float pressure = bme.readPressure() / 1000.0;
     Serial.println(pressure);
     dtostrf(pressure, 0, 2, out);
     return out; // String, Kilopascals. Don't forget the .0 at the end!
+    switchSPI(SD_CS);
 }
 
 int bme_getHumidity() {
+    switchSPI(BME_CS);
     return bme.readHumidity(); // Humidity as integer, percent.
+    switchSPI(SD_CS);
 }
 
 char* bme_getTemperatureC() {
+    switchSPI(BME_CS);
     float temperature = bme.readTemperature();
     static char out[7] = "";
 
     dtostrf(temperature, 0, 2, out);
     return out; 
+    switchSPI(SD_CS);
 }
 
 char* bme_packageData() {

@@ -28,9 +28,7 @@ void setup() {
     switchSPI(SD_CS); // Switch SPI Devices to SD. (Bring SD_CS LOW, BME_CS HIGH).
     sd_init(SD_CS);
 
-    switchSPI(BME_CS);
     bme_init();
-    switchSPI(SD_CS);
 
     ds_init();
     uv_init();
@@ -43,8 +41,6 @@ void loop() {
       
         // Dataformat: GPSTime,GPSLatLong,GPSData
         //sprintf(dataBuffer, "%s%s%s", gps_getTime(),gps_getLatLong(),gps_getMiscData());
-
-        switchSPI(BME_CS);
 
         Serial.print(bme_packageData());
         Serial.print(gps_getLatLong());
