@@ -25,12 +25,12 @@ void setup() {
 
     gps_init();
 
-    switchSPI(SD_CS, BME_CS);
+    switchSPI(SD_CS); // Switch SPI Devices to SD. (Bring SD_CS LOW, BME_CS HIGH).
     sd_init(SD_CS);
 
-    switchSPI(BME_CS, SD_CS);
+    switchSPI(BME_CS);
     bme_init();
-    switchSPI(SD_CS, BME_CS);
+    switchSPI(SD_CS);
 
     ds_init();
     uv_init();
@@ -44,7 +44,7 @@ void loop() {
         // Dataformat: GPSTime,GPSLatLong,GPSData
         //sprintf(dataBuffer, "%s%s%s", gps_getTime(),gps_getLatLong(),gps_getMiscData());
 
-        switchSPI(BME_CS,SD_CS);
+        switchSPI(BME_CS);
 
         Serial.print(bme_packageData());
         Serial.print(gps_getLatLong());
@@ -73,7 +73,7 @@ void sd_init(int cs) {
               debug("Error: Not enough space on SD Card!");
 
               while (true) {
-                  debugBlink(13); // Blinkenlights are for emergencies only.g               
+                  debugBlink(13); // Blinkenlights are for emergencies only.               
               }
             }
             

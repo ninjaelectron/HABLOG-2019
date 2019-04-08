@@ -67,9 +67,9 @@ char* gps_getFlightParameters() { // Get speed, altitude, etc...
     char altitudeMeters[9] = "";
     static char out[25] = "";
 
-    dtostrf(gps.speed, 6, 1, speedKnots);
-    dtostrf(gps.angle, 6, 1, heading);
-    dtostrf(gps.altitude, 9, 1, altitudeMeters);
+    dtostrf(gps.speed, 0, 1, speedKnots);
+    dtostrf(gps.angle, 0, 1, heading);
+    dtostrf(gps.altitude, 0, 1, altitudeMeters);
     sprintf(out, "%s,%s,%s,", speedKnots,heading,altitudeMeters);
 
     return out;

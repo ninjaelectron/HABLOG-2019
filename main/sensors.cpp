@@ -46,7 +46,6 @@ int bme_getHumidity() {
 
 char* bme_getTemperatureC() {
     float temperature = bme.readTemperature();
-    //Serial.println(temperature);
     static char out[7] = "";
 
     dtostrf(temperature, 0, 2, out);
@@ -91,7 +90,7 @@ void uv_init() {
 }
 
 int uv_getData() {
-    return digitalRead(UV_PIN);
+    return digitalRead(UV_PIN); // Simple Analog read. 0-1023.
 }
 
 char* uv_packageData() {

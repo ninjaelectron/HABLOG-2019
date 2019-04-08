@@ -1,11 +1,12 @@
 #include "util.h"
 #include <arduino.h>
 
-void switchSPI(int enabled, int disabled) { // Switch which SPI Device is being used.
-  digitalWrite(enabled, HIGH);
-  digitalWrite(disabled, HIGH);
+void switchSPI(int target) { // Switch which SPI Device is being used.
+    for (uint32_t i = 0; i < sizeof(CS_PINS); i++) {
+        digitalWrite(i, HIGH); // Bring all CS Lines HIGH (disabled).
+    }
   
-  digitalWrite(enabled, LOW);
+    digitalWrite(target, LOW); // Bring target CS Line LOW.
 }
 
 void debugBlink(int pin) {
