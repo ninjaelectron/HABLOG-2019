@@ -33,6 +33,7 @@ void setup() {
     switchSPI(SD_CS, BME_CS);
 
     ds_init();
+    uv_init();
 }
 
 void loop() {

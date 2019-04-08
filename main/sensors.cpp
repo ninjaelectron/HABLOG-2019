@@ -12,13 +12,14 @@
 const int BUILTIN_LED = 13;
 const int SPI_MISO = 12;
 const int SPI_MOSI = 11;
-const int OneWireBus = 2;
+const int ONE_WIRE_BUS = 2;
+const int UV_PIN = 15;
 
 // BME Stuff
 Adafruit_BME280 bme(BME_CS);  
 
 // OneWire stuff
-OneWire oneWire(OneWireBus); // Define OneWire Bus
+OneWire oneWire(ONE_WIRE_BUS); // Define OneWire Bus
 DallasTemperature dsTemp(&oneWire); // Link that bus to the DT Library
 
 // BEGIN BME ROUTINES
@@ -77,3 +78,18 @@ char* ds_packageData() {
 }
 
 // END DS ROUTINES
+
+// BEGIN UV ROUTINES
+void uv_init() {
+    pinMode(UV_PIN, OUTPUT);
+}
+
+int uv_getData() {
+    return digitalRead(UV_PIN);
+}
+
+char* uv_packageData() {
+    char out[5] = "";
+    sprintf(out, "%i", uv_getData());
+}
+// END UV ROUTINES
