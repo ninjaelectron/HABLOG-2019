@@ -23,16 +23,21 @@ OneWire oneWire(ONE_WIRE_BUS); // Define OneWire Bus
 DallasTemperature dsTemp(&oneWire); // Link that bus to the DT Library
 
 // BEGIN BME ROUTINES
-void bme_init(int cs) {
-    Adafruit_BME280 bme(cs);
+void bme_init() {
 
     if (!bme.begin()) { // bme.begin() returns true if it succeeds.
-      debug("Pressure Sensor Failed!");
+      Serial.println("Pressure Sensor Failed!");
+    } else {
+      Serial.println("PGood!");
     }
 }
 
-int bme_getPressure() {
-    return bme.readPressure(); // Integer, Pascals.
+char* bme_getPressure() {
+    static char out[7] = "";
+    float pressure = bme.readPressure() / 1000.0;
+    Serial.println(pressure);
+    dtostrf(pressure, 0, 2, out);
+    return out; // String, Kilopascals. Don't forget the .0 at the end!
 }
 
 int bme_getHumidity() {
@@ -40,17 +45,18 @@ int bme_getHumidity() {
 }
 
 char* bme_getTemperatureC() {
-    float pressure = bme.readTemperature();
+    float temperature = bme.readTemperature();
+    //Serial.println(temperature);
     static char out[7] = "";
 
-    dtostrf(pressure, 0, 2, out);
+    dtostrf(temperature, 0, 2, out);
     return out; 
 }
 
 char* bme_packageData() {
     static char out[21] = "";
     
-    sprintf(out, "%s,%i,%i,", bme_getTemperatureC(),bme_getPressure(),bme_getHumidity());
+    sprintf(out, "%s,%s,%i,", bme_getTemperatureC(),bme_getPressure(),bme_getHumidity());
     return out;
 }
 

@@ -29,7 +29,7 @@ void setup() {
     sd_init(SD_CS);
 
     switchSPI(BME_CS, SD_CS);
-    bme_init(BME_CS);
+    bme_init();
     switchSPI(SD_CS, BME_CS);
 
     ds_init();
@@ -44,7 +44,11 @@ void loop() {
         // Dataformat: GPSTime,GPSLatLong,GPSData
         //sprintf(dataBuffer, "%s%s%s", gps_getTime(),gps_getLatLong(),gps_getMiscData());
 
-        Serial.println(dataBuffer);
+        switchSPI(BME_CS,SD_CS);
+
+        Serial.print(bme_packageData());
+        Serial.print(gps_getLatLong());
+        Serial.println(gps_getTime());
     }
 }
 

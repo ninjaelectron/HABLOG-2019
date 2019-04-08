@@ -29,8 +29,6 @@ boolean gps_readWrapper() {
             return false; // Cancel data upload if GPS Fails. Probably will cause problems.    
         }
 
-        Serial.println(gps_getTime());
-
         return true; // Good to acquire data.
     }
     return false; // No data to acquire yet.
