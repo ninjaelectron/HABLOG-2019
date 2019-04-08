@@ -2,27 +2,20 @@
 #include <Adafruit_GPS.h>
 #include "util.h"
 
-Adafruit_GPS gps(&Serial2);
+HardwareSerial gpsSerial = Serial1;
+Adafruit_GPS gps(&gpsSerial);
 
-const boolean gps_DEBUG = false; // Debug toggle.
+const boolean gps_DEBUG = true; // Debug toggle.
 
 void gps_init() {
     gps.begin(9600); // Begin Communication with GPS Module.
     gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA); // Output values required for usage.
-    gps.sendCommand(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ); // Update values every second.
+    // gps.sendCommand(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ); // Update values every second.
+    gps.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
 }
 
 boolean gps_parseWrapper() { // Returns success/fail of GPS data acquisition.
-    if (gps.newNMEAreceived()) { // Got from gps_readWrapper().
-        if (!gps.parse(gps.lastNMEA())) {
-            return false; // Cancel data upload if GPS Fails. Probably will cause problems.    
-        }
 
-        Serial.println(gps.seconds, DEC);
-
-        return true; // Good to acquire data.
-    }
-    return false; // No data to acquire yet.
 }
 
 boolean gps_readWrapper() {
@@ -30,7 +23,18 @@ boolean gps_readWrapper() {
 
     if (gps_DEBUG) Serial.print(c);
 
-    return gps_parseWrapper();
+    if (gps.newNMEAreceived()) { // Got from gps_readWrapper().
+        if (!gps.parse(gps.lastNMEA())) {
+            Serial.println("Parsefail");
+            return false; // Cancel data upload if GPS Fails. Probably will cause problems.    
+        }
+
+        Serial.println(gps.seconds, DEC);
+
+        Serial.println("GoodData");
+        return true; // Good to acquire data.
+    }
+    return false; // No data to acquire yet.
 }
 
 char* gps_getLatLong() { // Get current location (in a Google Maps-compliant format).
@@ -84,4 +88,8 @@ char* gps_getMiscData() { // Get various data such as fix quality.
     sprintf(out, "%u,%u,", gps.fixquality,gps.satellites);
 
     return out;
+}
+
+boolean gps_getFix() {
+  return gps.fix;
 }

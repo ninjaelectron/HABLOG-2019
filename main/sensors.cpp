@@ -89,7 +89,7 @@ int uv_getData() {
 }
 
 char* uv_packageData() {
-    char out[5] = "";
-    sprintf(out, "%i", uv_getData());
+    char out[6] = "";
+    sprintf(out, "%i,", uv_getData());
 }
 // END UV ROUTINES

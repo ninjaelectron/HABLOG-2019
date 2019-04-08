@@ -6,7 +6,7 @@
 #include "gps.h"
 
 // Precompiler Definitions.
-#define GPS_SERIAL Serial2
+#define GPS_SERIAL Serial1
 
 char dataBuffer[64];
 
@@ -37,11 +37,15 @@ void setup() {
 }
 
 void loop() {
+    
     if (gps_readWrapper()) {
       // Continue with data acquisition.
+      
+      // Dataformat: GPSTime,GPSLatLong,GPSData
+      sprintf(dataBuffer, "%s%s%s", gps_getTime(),gps_getLatLong(),gps_getMiscData());
 
-      // Dataformat: HH:MM:SS,millis(),satelliteCount,latitudelongitude,BMEPressure,BMETemperature,BMEHumidity
-      sprintf(dataBuffer, "%u:%u:%u,%l,%u,%s,");
+      Serial.println(dataBuffer);
+    } else {
     }
 }
 
