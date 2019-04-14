@@ -13,7 +13,7 @@ const int BUILTIN_LED = 13;
 const int SPI_MISO = 12;
 const int SPI_MOSI = 11;
 const int ONE_WIRE_BUS = 2;
-const int UV_PIN = 15;
+const int UV_PIN = A1;
 
 // BME Stuff
 Adafruit_BME280 bme(BME_CS);  
