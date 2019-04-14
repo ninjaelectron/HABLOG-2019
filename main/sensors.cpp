@@ -93,11 +93,11 @@ char* ds_packageData() {
 
 // BEGIN UV ROUTINES
 void uv_init() {
-    pinMode(UV_PIN, OUTPUT);
+    pinMode(UV_PIN, INPUT);
 }
 
 int uv_getData() {
-    return digitalRead(UV_PIN); // Simple Analog read. 0-1023.
+    return analogRead(UV_PIN); // Simple Analog read. 0-1023.
 }
 
 char* uv_packageData() {
