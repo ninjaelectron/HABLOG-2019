@@ -11,3 +11,4 @@ void debugBlink(int pin);
 void debug(char c[]); // Debug console messages.
 
 void sd_init(int cs);
+void sd_send(char* c);

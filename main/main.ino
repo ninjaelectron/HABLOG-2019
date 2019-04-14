@@ -9,6 +9,7 @@
 #define GPS_SERIAL Serial1
 
 char dataBuffer[64];
+int secondCheck = 99; // Validation via seconds on GPS Clock.
 
 // Files.
 char filename[13] = "LOGGER00.CSV"; 
@@ -30,21 +31,40 @@ void setup() {
 
     bme_init();
 
-    ds_init();
+    // ds_init();
     uv_init();
+    
+    // Send in short bursts to not overwhelm the SD Board.
+    sd_send("Garden City Gopherspace HABLOG\n");
+    sd_send("Time,Latitude,Longitude,");
+    sd_send("Altitude (m),");
+    sd_send("Internal Temperature (C),");
+    sd_send("Internal Pressure (kPa),Humidity (%),");
+    sd_send("Fix Quality (Debug),Satellites,UV Data (Raw)\n");
+    logger.close();
 }
 
 void loop() {
     
-    if (gps_readWrapper()) {
+    if (gps_readWrapper() && (secondCheck != gps_getSeconds())) { // Tests for duplicate logging periods.
         // Continue with data acquisition.
       
         // Dataformat: GPSTime,GPSLatLong,GPSData
         //sprintf(dataBuffer, "%s%s%s", gps_getTime(),gps_getLatLong(),gps_getMiscData());
+        
+        switchSPI(SD_CS);
+        logger = SD.open(filename, FILE_WRITE);
+        sd_send(gps_getTime());
+        sd_send(gps_getLatLong());
+        sd_send(gps_getFlightParameters());
+        sd_send(bme_packageData());
+        sd_send(gps_getMiscData());
+        sd_send(uv_packageData());
+        sd_send("\n");
+        logger.close();
+        //Serial.println(gps_getLatLong());
 
-        Serial.print(bme_packageData());
-        Serial.print(gps_getLatLong());
-        Serial.println(gps_getTime());
+        secondCheck = gps_getSeconds();
     }
 }
 
@@ -82,4 +102,10 @@ void sd_init(int cs) {
             debug(filename);
         }
     }
+}
+
+void sd_send(char* c) { // Send data to SD Card (Hopefully Safely) 
+    Serial.print(c);   
+    logger.print(c);
+    logger.flush();
 }

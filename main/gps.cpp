@@ -6,13 +6,13 @@
 HardwareSerial gpsSerial = Serial1;
 Adafruit_GPS gps(&gpsSerial);
 
-const boolean gps_DEBUG = true; // Debug toggle.
+const boolean gps_DEBUG = false; // Debug toggle.
 
 void gps_init() {
     gps.begin(9600); // Begin Communication with GPS Module.
     gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA); // Output values required for usage.
-    // gps.sendCommand(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ); // Update values every second.
-    gps.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
+    gps.sendCommand(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ); // Update values 5 seconds.
+    //gps.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
 }
 
 boolean gps_parseWrapper() { // Returns success/fail of GPS data acquisition.
@@ -34,13 +34,16 @@ boolean gps_readWrapper() {
     return false; // No data to acquire yet.
 }
 
-char *gps_getLatLong() { // Get current location (in a Google Maps-compliant format).
+int gps_getSeconds() { // For validation purposes.
+    return gps.seconds;
+}
+
+char* gps_getLatLong() { // Get current location (in a Google Maps-compliant format).
     float latitude = gps.latitudeDegrees;
     float longitude = gps.longitudeDegrees;
     char outputLat[11] = "";
     char outputLong[11] = "";
-    static char finalOutput[22] = "";
-
+    static char finalOutput[23] = "";
 
     dtostrf(latitude,0,4,outputLat); // dtostrf arg2 is minimum characters, not expected
     dtostrf(longitude,0,4,outputLong);
@@ -63,21 +66,20 @@ char* gps_getTime() { // Get current UTC Time.
 
 char* gps_getFlightParameters() { // Get speed, altitude, etc...
     char speedKnots[6] = "";
-    char heading[6] = "";
     char altitudeMeters[9] = "";
-    static char out[25] = "";
+    static char out[12] = "";
 
     dtostrf(gps.speed, 0, 1, speedKnots);
-    dtostrf(gps.angle, 0, 1, heading);
     dtostrf(gps.altitude, 0, 1, altitudeMeters);
-    sprintf(out, "%s,%s,%s,", speedKnots,heading,altitudeMeters);
+    sprintf(out, "%s,%s,", altitudeMeters,speedKnots);
 
     return out;
 
     free(speedKnots);
-    free(heading);
     free(altitudeMeters);
 }
+
+
 
 char* gps_getMiscData() { // Get various data such as fix quality.
     static char out[6] = "";

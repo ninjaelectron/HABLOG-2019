@@ -37,8 +37,8 @@ char* bme_getPressure() {
     switchSPI(BME_CS);
     static char out[7] = "";
     float pressure = bme.readPressure() / 1000.0;
-    Serial.println(pressure);
-    dtostrf(pressure, 0, 2, out);
+    //Serial.println(pressure);
+    dtostrf(pressure, 0, 1, out);
     return out; // String, Kilopascals. Don't forget the .0 at the end!
     switchSPI(SD_CS);
 }
@@ -54,7 +54,7 @@ char* bme_getTemperatureC() {
     float temperature = bme.readTemperature();
     static char out[7] = "";
 
-    dtostrf(temperature, 0, 2, out);
+    dtostrf(temperature, 0, 1, out);
     return out; 
     switchSPI(SD_CS);
 }
