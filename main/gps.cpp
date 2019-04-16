@@ -6,17 +6,13 @@
 HardwareSerial gpsSerial = Serial1;
 Adafruit_GPS gps(&gpsSerial);
 
-const boolean gps_DEBUG = false; // Debug toggle.
+const boolean gps_DEBUG = true; // Debug toggle.
 
 void gps_init() {
     gps.begin(9600); // Begin Communication with GPS Module.
     gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA); // Output values required for usage.
+    delay(500);
     gps.sendCommand(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ); // Update values 5 seconds.
-    //gps.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
-}
-
-boolean gps_parseWrapper() { // Returns success/fail of GPS data acquisition.
-
 }
 
 boolean gps_readWrapper() {

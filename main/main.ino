@@ -16,30 +16,31 @@ char filename[13] = "LOGGER00.CSV";
 File logger;
 
 void setup() {
+
+    delay(1000);
+  
     Serial.begin(9600);
     debug("Serial Test...");
 
     GPS_SERIAL.begin(9600); // GPS Hardware Serial.
 
-    pinMode(SD_CS, OUTPUT);
-    pinMode(BME_CS, OUTPUT);
-
     gps_init();
 
+    pinMode(SD_CS, OUTPUT);
+    pinMode(BME_CS, OUTPUT);
+    
     switchSPI(SD_CS); // Switch SPI Devices to SD. (Bring SD_CS LOW, BME_CS HIGH).
     sd_init(SD_CS);
 
     bme_init();
-
-    // ds_init();
     uv_init();
     
     // Send in short bursts to not overwhelm the SD Board.
     sd_send("Garden City Gopherspace HABLOG\n");
     sd_send("Time,Latitude,Longitude,");
-    sd_send("Altitude (m),");
-    sd_send("Internal Temperature (C),");
-    sd_send("Internal Pressure (kPa),Humidity (%),");
+    sd_send("Altitude (m),Speed (kt)");
+    sd_send("Temperature (C),");
+    sd_send("Pressure (kPa),Humidity (%),");
     sd_send("Fix Quality (Debug),Satellites,UV Data (Raw)\n");
     logger.close();
 }

@@ -1,9 +1,12 @@
 // SPI Chip-Select Pins.
 const int SD_CS = 10;
 const int BME_CS = 9;
-const int MPU_CS = 20;
 
-const int CS_PINS[3] = {SD_CS, BME_CS, MPU_CS};
+// I2C Pins
+const int MPU_SCL = 19;
+const int MPU_SDA = 18;
+
+const int CS_PINS[3] = {SD_CS, BME_CS};
 
 void switchSPI(int target); // Switch Devices on SPI Bus.
 
