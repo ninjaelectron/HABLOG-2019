@@ -1,14 +1,13 @@
 #include <SD.h>
-#include <SD_t3.h> // Required extension for the Teensy 3.2
-#include <SPI.h>
+#include <SD_t3.h> // Required extension of SD.h for the Teensy 3.2
+#include <SPI.h> // Required for SD and BME Communication.
 #include "util.h" // Various utilities for SD Card usage, debugging, etc...
-#include "sensors.h" // Functions relating to the usage and init of sensors
-#include "gps.h"
+#include "sensors.h" // Functions relating to the usage and init of sensors.
+#include "gps.h" // Relating to the GPS Sensor.
 
 // Precompiler Definitions.
-#define GPS_SERIAL Serial1
+#define GPS_SERIAL Serial1 // GPS serial connection.
 
-char dataBuffer[64];
 int secondCheck = 99; // Validation via seconds on GPS Clock.
 
 // Files.
@@ -17,7 +16,7 @@ File logger;
 
 void setup() {
 
-    delay(1000);
+    delay(1000); // Delay for safety purposes.
   
     Serial.begin(9600);
     debug("Serial Test...");
@@ -50,10 +49,7 @@ void loop() {
     if (gps_readWrapper() && (secondCheck != gps_getSeconds())) { // Tests for duplicate logging periods.
         // Continue with data acquisition.
       
-        // Dataformat: GPSTime,GPSLatLong,GPSData
-        //sprintf(dataBuffer, "%s%s%s", gps_getTime(),gps_getLatLong(),gps_getMiscData());
-        
-        switchSPI(SD_CS);
+        switchSPI(SD_CS); // Double-check if SD is the current device.
         logger = SD.open(filename, FILE_WRITE);
         sd_send(gps_getTime());
         sd_send(gps_getLatLong());
@@ -63,7 +59,6 @@ void loop() {
         sd_send(uv_packageData());
         sd_send("\n");
         logger.close();
-        //Serial.println(gps_getLatLong());
 
         secondCheck = gps_getSeconds();
     }
@@ -108,5 +103,5 @@ void sd_init(int cs) {
 void sd_send(char* c) { // Send data to SD Card (Hopefully Safely) 
     Serial.print(c);   
     logger.print(c);
-    logger.flush();
+    logger.flush(); // Fully flush data from cache. Ensures proper writes.
 }
