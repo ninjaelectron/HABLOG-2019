@@ -25,3 +25,7 @@ void debugBlink(int pin) {
 void debug(char c[]) { // Prints to serial console. Easily disabled.
     Serial.println(c);
 }
+
+bool checkArmed() {
+    return digitalRead(ARM_PIN);
+}

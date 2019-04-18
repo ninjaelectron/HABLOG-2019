@@ -25,6 +25,8 @@ void setup() {
 
     gps_init();
 
+    pinMode(ARM_PIN, INPUT); // Enable arming switch. High = data flow. Low = prevent data flow.
+
     pinMode(SD_CS, OUTPUT);
     pinMode(BME_CS, OUTPUT);
     
@@ -47,19 +49,20 @@ void setup() {
 void loop() {
     
     if (gps_readWrapper() && (secondCheck != gps_getSeconds())) { // Tests for duplicate logging periods.
-        // Continue with data acquisition.
-      
-        switchSPI(SD_CS); // Double-check if SD is the current device.
-        logger = SD.open(filename, FILE_WRITE);
-        sd_send(gps_getTime());
-        sd_send(gps_getLatLong());
-        sd_send(gps_getFlightParameters());
-        sd_send(bme_packageData());
-        sd_send(gps_getMiscData());
-        sd_send(uv_packageData());
-        sd_send("\n");
-        logger.close();
-
+        if (checkArmed()) {
+            // Continue with data acquisition.
+          
+            switchSPI(SD_CS); // Double-check if SD is the current device.
+            logger = SD.open(filename, FILE_WRITE);
+            sd_send(gps_getTime());
+            sd_send(gps_getLatLong());
+            sd_send(gps_getFlightParameters());
+            sd_send(bme_packageData());
+            sd_send(gps_getMiscData());
+            sd_send(uv_packageData());
+            sd_send("\n");
+            logger.close();
+        }
         secondCheck = gps_getSeconds();
     }
 }
