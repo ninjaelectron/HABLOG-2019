@@ -30,16 +30,20 @@ void setup() {
     pinMode(SD_CS, OUTPUT);
     pinMode(BME_CS, OUTPUT);
     
-    switchSPI(SD_CS); // Switch SPI Devices to SD. (Bring SD_CS LOW, BME_CS HIGH).
+    switchSPI(SD_CS, SD_SCK); // Switch SPI Devices to SD. (Bring SD_CS LOW, BME_CS HIGH).
     sd_init(SD_CS);
 
+    
+    switchSPI(BME_CS, BME_SCK);
     bme_init();
     uv_init();
+
+    switchSPI(SD_CS, SD_SCK);
     
     // Send in short bursts to not overwhelm the SD Board.
     sd_send("Garden City Gopherspace HABLOG\n");
     sd_send("Time,Latitude,Longitude,");
-    sd_send("Altitude (m),Speed (kt)");
+    sd_send("Altitude (m),Speed (kt),");
     sd_send("Temperature (C),");
     sd_send("Pressure (kPa),Humidity (%),");
     sd_send("Fix Quality (Debug),Satellites,UV Data (Raw)\n");
@@ -52,7 +56,7 @@ void loop() {
         if (checkArmed()) {
             // Continue with data acquisition.
           
-            switchSPI(SD_CS); // Double-check if SD is the current device.
+            switchSPI(SD_CS, SD_SCK); // Double-check if SD is the current device.
             logger = SD.open(filename, FILE_WRITE);
             sd_send(gps_getTime());
             sd_send(gps_getLatLong());
@@ -104,6 +108,7 @@ void sd_init(int cs) {
 }
 
 void sd_send(char* c) { // Send data to SD Card (Hopefully Safely) 
+    switchSPI(SD_CS, SD_SCK);
     Serial.print(c);   
     logger.print(c);
     logger.flush(); // Fully flush data from cache. Ensures proper writes.

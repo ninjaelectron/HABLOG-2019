@@ -1,18 +1,22 @@
 #include "util.h"
 #include <arduino.h>
+#include <SPI.h>
 
 int currentSPI = 0; // Current SPI Bus. Starts blank.
+int currentSCK = SD_SCK;
 
-void switchSPI(int target) { // Switch which SPI Device is being used.
-    if (currentSPI != target) {
+void switchSPI(int targetCS, int targetSCK) { // Switch which SPI Device is being used.
+    if (currentSPI != targetCS) {
         for (uint32_t i = 0; i < sizeof(CS_PINS); i++) {
             digitalWrite(i, HIGH); // Bring all CS Lines HIGH (disabled).
         }
-      
-        digitalWrite(target, LOW); // Bring target CS Line LOW.
-
-        currentSPI = target;
     }
+        SPI.setSCK(targetSCK);
+    
+        digitalWrite(targetCS, LOW); // Bring target CS Line LOW.
+
+        currentSCK = targetSCK;
+        currentSPI = targetCS;
 }
 
 void debugBlink(int pin) {
