@@ -33,10 +33,6 @@ boolean gps_readWrapper() {
     return false; // No data to acquire yet.
 }
 
-int gps_getSeconds() { // For validation purposes.
-    return gps.seconds;
-}
-
 char* gps_getLatLong() { // Get current location (in a Google Maps-compliant format).
     float latitude = gps.latitudeDegrees;
     float longitude = gps.longitudeDegrees;

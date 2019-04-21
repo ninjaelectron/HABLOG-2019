@@ -53,7 +53,7 @@ void setup() {
 }
 
 void loop() {
-    if (gps_readWrapper() && (secondCheck != gps_getSeconds())) { // Tests for duplicate logging periods.
+    if (gps_readWrapper() && (secondCheck != second())) { // Tests for duplicate logging periods.
 
         setTime(gps);
         
@@ -71,7 +71,7 @@ void loop() {
             sd_send("\n");
             logger.close();
         }
-        secondCheck = gps_getSeconds();
+        secondCheck = second();
     }
 }
 
