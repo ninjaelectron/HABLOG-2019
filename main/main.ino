@@ -62,7 +62,7 @@ void loop() {
           
             switchSPI(SD_CS, SD_SCK); // Double-check if SD is the current device.
             logger = SD.open(filename, FILE_WRITE);
-            sd_send(gps_getTime());
+            sd_send(rtc_getTime());
             sd_send(gps_getLatLong());
             sd_send(gps_getFlightParameters());
             sd_send(bme_packageData());

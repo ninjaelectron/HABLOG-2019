@@ -16,7 +16,7 @@ void gps_init() {
     gps.sendCommand(PMTK_SET_NMEA_UPDATE_1_HERTZ); // Update values 5 seconds.
 }
 
-boolean gps_readWrapper() {
+boolean gps_readWrapper() { // Inputs data and syncs RTC.
     char c = gps.read();
 
     if (gps_DEBUG) Serial.print(c);
@@ -74,8 +74,6 @@ char* gps_getFlightParameters() { // Get speed, altitude, etc...
     free(altitudeMeters);
 }
 
-
-
 char* gps_getMiscData() { // Get various data such as fix quality.
     static char out[6] = "";
     sprintf(out, "%u,%u,", gps.fixquality,gps.satellites);
@@ -85,4 +83,14 @@ char* gps_getMiscData() { // Get various data such as fix quality.
 
 boolean gps_getFix() {
   return gps.fix;
+}
+
+// RTC Timekeeping Functions.
+
+char* rtc_getTime() {
+    static char out[9] = "";
+
+    sprintf(out, "%02u:%02u:%02u,", hour(),minute(),second());
+
+    return out;
 }

@@ -8,3 +8,5 @@ char* gps_getFlightParameters();
 char* gps_getMiscData();
 
 boolean gps_getFix();
+
+char* rtc_getTime();
