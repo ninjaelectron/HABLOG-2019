@@ -2,6 +2,7 @@
 #include <Adafruit_GPS.h>
 #include "gps.h"
 #include "util.h"
+#include <TimeLib.h> // For Timekeeping.
 
 HardwareSerial gpsSerial = Serial1;
 Adafruit_GPS gps(&gpsSerial);
@@ -12,7 +13,7 @@ void gps_init() {
     gps.begin(9600); // Begin Communication with GPS Module.
     gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA); // Output values required for usage.
     delay(500);
-    gps.sendCommand(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ); // Update values 5 seconds.
+    gps.sendCommand(PMTK_SET_NMEA_UPDATE_1_HERTZ); // Update values 5 seconds.
 }
 
 boolean gps_readWrapper() {
@@ -24,7 +25,9 @@ boolean gps_readWrapper() {
         if (!gps.parse(gps.lastNMEA())) {
             return false; // Cancel data upload if GPS Fails. Probably will cause problems.    
         }
-
+        if (gps.fix) {
+            setTime(gps.hour, gps.minute, gps.seconds, gps.day, gps.month, gps.year); // Sync time from GPS over to Teensy internal RTC.
+        }
         return true; // Good to acquire data.
     }
     return false; // No data to acquire yet.

@@ -5,6 +5,8 @@
 #include "sensors.h" // Functions relating to the usage and init of sensors.
 #include "gps.h" // Relating to the GPS Sensor.
 
+#include <TimeLib.h> // Time Library for timekeeping.
+
 // Precompiler Definitions.
 #define GPS_SERIAL Serial1 // GPS serial connection.
 
@@ -51,8 +53,10 @@ void setup() {
 }
 
 void loop() {
-    
     if (gps_readWrapper() && (secondCheck != gps_getSeconds())) { // Tests for duplicate logging periods.
+
+        setTime(gps);
+        
         if (checkArmed()) {
             // Continue with data acquisition.
           
