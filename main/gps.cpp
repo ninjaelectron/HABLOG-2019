@@ -13,7 +13,7 @@ void gps_init() {
     gps.begin(9600); // Begin Communication with GPS Module.
     gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA); // Output values required for usage.
     delay(500);
-    gps.sendCommand(PMTK_SET_NMEA_UPDATE_1_HERTZ); // Update values 5 seconds.
+    gps.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ); // Update values 5 seconds.
 }
 
 boolean gps_readWrapper() { // Inputs data and syncs RTC.
@@ -24,10 +24,10 @@ boolean gps_readWrapper() { // Inputs data and syncs RTC.
     if (gps.newNMEAreceived()) { // Got from gps_readWrapper().
         if (!gps.parse(gps.lastNMEA())) {
             return false; // Cancel data upload if GPS Fails. Probably will cause problems.    
-        }
+        } 
         if (gps.fix) {
             setTime(gps.hour, gps.minute, gps.seconds, gps.day, gps.month, gps.year); // Sync time from GPS over to Teensy internal RTC.
-        }
+        } 
         return true; // Good to acquire data.
     }
     return false; // No data to acquire yet.
@@ -86,11 +86,10 @@ boolean gps_getFix() {
 }
 
 // RTC Timekeeping Functions.
-
 char* rtc_getTime() {
     static char out[9] = "";
 
     sprintf(out, "%02u:%02u:%02u,", hour(),minute(),second());
 
     return out;
-}
+} 

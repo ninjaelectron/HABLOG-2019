@@ -6,6 +6,7 @@
 #include "gps.h" // Relating to the GPS Sensor.
 
 #include <TimeLib.h> // Time Library for timekeeping.
+#include <TimeAlarms.h> // For timed functions.
 
 // Precompiler Definitions.
 #define GPS_SERIAL Serial1 // GPS serial connection.
@@ -50,28 +51,28 @@ void setup() {
     sd_send("Pressure (kPa),Humidity (%),");
     sd_send("Fix Quality (Debug),Satellites,UV Data (Raw)\n");
     logger.close();
+
+    Alarm.timerRepeat(5, dataLog); // Set timer for every 5 seconds from this point forward.
 }
 
 void loop() {
-    if (gps_readWrapper() && (secondCheck != second())) { // Tests for duplicate logging periods.
+    gps_readWrapper(); // Update GPS variables.
+}
 
-        setTime(gps);
-        
-        if (checkArmed()) {
-            // Continue with data acquisition.
-          
-            switchSPI(SD_CS, SD_SCK); // Double-check if SD is the current device.
-            logger = SD.open(filename, FILE_WRITE);
-            sd_send(rtc_getTime());
-            sd_send(gps_getLatLong());
-            sd_send(gps_getFlightParameters());
-            sd_send(bme_packageData());
-            sd_send(gps_getMiscData());
-            sd_send(uv_packageData());
-            sd_send("\n");
-            logger.close();
-        }
-        secondCheck = second();
+void dataLog() {
+    if (checkArmed()) {
+        // Continue with data acquisition.
+      
+        switchSPI(SD_CS, SD_SCK); // Double-check if SD is the current device.
+        logger = SD.open(filename, FILE_WRITE);
+        sd_send(rtc_getTime());
+        sd_send(gps_getLatLong());
+        sd_send(gps_getFlightParameters());
+        sd_send(bme_packageData());
+        sd_send(gps_getMiscData());
+        sd_send(uv_packageData());
+        sd_send("\n");
+        logger.close();
     }
 }
 
