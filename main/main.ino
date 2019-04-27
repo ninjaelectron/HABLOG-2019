@@ -17,6 +17,8 @@ int secondCheck = 99; // Validation via seconds on GPS Clock.
 char filename[13] = "LOGGER00.CSV"; 
 File logger;
 
+void dataLog();
+
 void setup() {
 
     delay(1000); // Delay for safety purposes.
@@ -45,7 +47,7 @@ void setup() {
     
     // Send in short bursts to not overwhelm the SD Board.
     sd_send("Garden City Gopherspace HABLOG\n");
-    sd_send("Time,Latitude,Longitude,");
+    sd_send("Time (T+),Time (UTC),Latitude,Longitude,");
     sd_send("Altitude (m),Speed (kt),");
     sd_send("Temperature (C),");
     sd_send("Pressure (kPa),Humidity (%),");
@@ -57,6 +59,8 @@ void setup() {
 
 void loop() {
     gps_readWrapper(); // Update GPS variables.
+    
+    Alarm.delay(0); // Update alarm triggers as often as possible.
 }
 
 void dataLog() {
@@ -66,6 +70,7 @@ void dataLog() {
         switchSPI(SD_CS, SD_SCK); // Double-check if SD is the current device.
         logger = SD.open(filename, FILE_WRITE);
         sd_send(rtc_getTime());
+        sd_send(gps_getTime());
         sd_send(gps_getLatLong());
         sd_send(gps_getFlightParameters());
         sd_send(bme_packageData());

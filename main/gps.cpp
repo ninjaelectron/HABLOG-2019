@@ -21,12 +21,10 @@ boolean gps_readWrapper() { // Inputs data and syncs RTC.
 
     if (gps_DEBUG) Serial.print(c);
 
+
     if (gps.newNMEAreceived()) { // Got from gps_readWrapper().
         if (!gps.parse(gps.lastNMEA())) {
             return false; // Cancel data upload if GPS Fails. Probably will cause problems.    
-        } 
-        if (gps.fix) {
-            setTime(gps.hour, gps.minute, gps.seconds, gps.day, gps.month, gps.year); // Sync time from GPS over to Teensy internal RTC.
         } 
         return true; // Good to acquire data.
     }
